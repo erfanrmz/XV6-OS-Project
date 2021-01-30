@@ -111,6 +111,8 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
+  for (int i = 0 ; i < 24 ; i++)
+    p->sysCount[i] = 0;
 
   return p;
 }
