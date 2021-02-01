@@ -534,3 +534,27 @@ procdump(void)
     cprintf("\n");
   }
 }
+int  children(int pid){
+  struct proc *p;
+  // int * ch;
+  int curser =0;
+  // ch =(int *)chh;
+  int childrens =0;
+  acquire(&ptable.lock);
+  for (p = ptable.proc ; p< &ptable.proc[NPROC];p++){
+    if(p->parent->pid == pid ){
+      // *(ch +curser) =p->pid;
+      int pow =1;
+      for (int j=0 ;j<curser;j++){
+        pow = pow * 100;
+      }
+      childrens += p->pid * pow;
+      // children_str[curser] = p->pid;
+
+      curser++;
+    }
+    // *ch = curser;
+  }
+  release(&ptable.lock);
+  return childrens;
+}

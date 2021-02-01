@@ -94,7 +94,18 @@ sys_getParentID(void)
 {
   return myproc()->parent->pid;
 }
-int
+
+int  
+sys_getChildren(void)
+{
+  // char * ch ;
+  // if(argptr(0 , (void *)&ch , sizeof(char)*64) < 0){
+  //   return -1;}
+  
+  return children (myproc()->pid);
+}
+
+int 
 sys_getSyscallCounter(void)
 {
   int n;
