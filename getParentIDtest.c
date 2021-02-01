@@ -14,6 +14,9 @@ int main()
         printf(1,"This is Process %d and parentID is %d\n",getpid(),getParentID());
     }
     
+    while(wait() != -1) { }
+    sleep(1);
+    exit();
     
     return 0;
 }
