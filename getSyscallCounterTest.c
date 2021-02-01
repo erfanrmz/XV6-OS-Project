@@ -13,6 +13,9 @@ int main(int argc, char *argv[])
   getSyscallCounter(n);
   getSyscallCounter(n);
   printf(1,"Counter of systemCall %d: %d \n",n,getSyscallCounter(n));
+  while(wait() != -1) { }
+    sleep(1);
+    exit();
 
     return 0;
 }
