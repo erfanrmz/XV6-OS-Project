@@ -88,6 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->currentSlice = QUANTUM;
 
   release(&ptable.lock);
 
