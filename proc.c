@@ -88,7 +88,11 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  p->currentSlice = QUANTUM;
+  if (Policy == 2)
+    p->currentSlice = QUANTUM;
+  else
+    p->currentSlice = 0;
+  
 
   release(&ptable.lock);
 
@@ -325,13 +329,16 @@ wait(void)
 void
 scheduler(void)
 {
+  
   struct proc *p;
   // struct proc *q;
   struct cpu *c = mycpu();
   c->proc = 0;
   int cur_prio=1;
   int finish_flag[6] ={0};
+  // Policy = 0;
   // int finished_prio=0;
+
   for(;;){
     cur_prio=1;
     // Enable interrupts on this processor.
@@ -346,48 +353,71 @@ scheduler(void)
     //       q->prio = 3;
     //    }
     // }
-    while (cur_prio < 7)
+    if (Policy == 0)
     {
-      // cprintf("%d shit is here1\n",cur_prio);
-      finish_flag[cur_prio] = 0;
-      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-        
-        if(p->state != RUNNABLE || p->prio != cur_prio)
-          continue;
-        finish_flag[cur_prio] =1;
-        
-    
-        // Switch to chosen process.  It is the process's job
-        // to release ptable.lock and then reacquire it
-        // before jumping back to us.
-        c->proc = p;
-        
-        switchuvm(p);
-
-        p->state = RUNNING;
-
-        swtch(&(c->scheduler), p->context);
-        switchkvm();
-      
-
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
-      }
-      // for (int i = 1; i < cur_prio; i++)
-      // {
-        
-      // }
-      
-      if (finish_flag[cur_prio] == 0)
+      while (cur_prio < 7)
       {
-        cur_prio ++;
-      }
+         
+        finish_flag[cur_prio] = 0;
+        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+          
+          if(p->state != RUNNABLE || p->prio != cur_prio)
+            continue;
+          finish_flag[cur_prio] =1;
+          
       
-    }
-    
+          // Switch to chosen process.  It is the process's job
+          // to release ptable.lock and then reacquire it
+          // before jumping back to us.
+          c->proc = p;
+          
+          switchuvm(p);
 
+          p->state = RUNNING;
+
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+        
+
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+        }
+        // for (int i = 1; i < cur_prio; i++)
+        // {
+          
+        // }
+        
+        if (finish_flag[cur_prio] == 0)
+        {
+          cur_prio ++;
+        }
+        
+      } 
     
+    }
+
+    if (Policy == 1)
+    {
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if(p->state != RUNNABLE)
+          continue;
+
+      // Switch to chosen process.  It is the process's job
+      // to release ptable.lock and then reacquire it
+      // before jumping back to us.
+       c->proc = p;
+       switchuvm(p);
+       p->state = RUNNING;
+
+       swtch(&(c->scheduler), p->context);
+       switchkvm();
+
+      // Process is done running for now.
+      // It should have changed its p->state before coming back.
+       c->proc = 0;
+    }
+    }
     release(&ptable.lock);
 
   }

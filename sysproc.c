@@ -143,3 +143,19 @@ sys_safePrint(void){
   
   return myPrint(child_num,i);
 }
+int 
+sys_changePolicy(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+  if(n == 0 || n == 1 || n == 2)
+    Policy = n;
+  else
+  {
+    cprintf("You can just choose 0 , 1 and 2");
+  }
+  
+  return Policy;
+
+}
