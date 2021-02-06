@@ -26,3 +26,4 @@
 #define SYS_setPriority 25
 #define SYS_safePrint 26
 #define SYS_changePolicy 27
+#define SYS_wait2 28

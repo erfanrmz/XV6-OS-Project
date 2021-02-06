@@ -29,6 +29,7 @@ int getSyscallCounter(int);
 int setPriority(int);
 int safePrint(int ,int);
 int changePolicy(int);
+int wait2(int*,int*,int*);
 
 // ulib.c
 int stat(const char*, struct stat*);

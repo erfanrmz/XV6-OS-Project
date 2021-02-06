@@ -25,7 +25,17 @@ sys_wait(void)
 {
   return wait();
 }
-
+int
+sys_wait2(void) {
+  int *cbt, *tat, *wt;
+  if (argptr(0, (void*)&cbt, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(1, (void*)&tat, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(2, (void*)&wt, sizeof(wt)) < 0)
+    return -1;
+  return wait2(cbt, tat, wt);
+}
 int
 sys_kill(void)
 {
