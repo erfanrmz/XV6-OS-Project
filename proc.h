@@ -53,6 +53,11 @@ struct proc {
   int sysCount[24];            // System calls Counter
   int prio;                    // Process priority
   int currentSlice;
+  int cTime;                   // Creation Time
+  int tTime;                   // Termination Time
+  int runTime;                 // Running Time
+  int readyTime;               // Ready Time
+  int sleepTime;               // Sleeping Time
 };
 
 // Process memory is laid out contiguously, low addresses first:

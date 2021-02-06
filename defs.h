@@ -122,6 +122,7 @@ void            wakeup(void*);
 void            yield(void);
 int             children(int);
 int             myPrint(int ,int);
+void            updateProcTimes(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

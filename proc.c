@@ -116,8 +116,13 @@ found:
   p->context = (struct context*)sp;
   memset(p->context, 0, sizeof *p->context);
   p->context->eip = (uint)forkret;
-  for (int i = 0 ; i < 24 ; i++)
-    p->sysCount[i] = 0;
+  acquire(&ptable.lock);
+  p->cTime = ticks;
+  p->tTime = 0;
+  p->runTime = 0;
+  p->sleepTime = 0;
+  p->readyTime = 0;
+  release(&ptable.lock);
 
   return p;
 }
@@ -269,11 +274,29 @@ exit(void)
   }
 
   // Jump into the scheduler, never to return.
+  curproc->tTime = ticks;
   curproc->state = ZOMBIE;
   sched();
   panic("zombie exit");
 }
+void
+updateProcTimes(void)
+{
+  struct proc *p;
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++)
+  {
+    if (p->state == RUNNING)
+      p->runTime++;
+    else if(p->state == SLEEPING)
+      p->sleepTime++;
+    else if (p->state == RUNNABLE)
+      p->readyTime++;
+      
+  }
+  release(&ptable.lock);
 
+}
 // Wait for a child process to exit and return its pid.
 // Return -1 if this process has no children.
 int
@@ -301,6 +324,11 @@ wait(void)
         p->parent = 0;
         p->name[0] = 0;
         p->killed = 0;
+        p->cTime = 0;
+        p->tTime = 0;
+        p->readyTime = 0;
+        p->runTime = 0;
+        p->sleepTime = 0;
         p->state = UNUSED;
         release(&ptable.lock);
         return pid;
