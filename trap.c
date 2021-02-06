@@ -106,11 +106,22 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
      {
-       int current = myproc()->currentSlice;
-       if ( current ) 
+       if(Policy == 2)
+       {
+        int current = myproc()->currentSlice;
+        if ( current ) 
           myproc()->currentSlice = current - 1;
-       else 
+        else 
           yield();
+       }
+          
+       else
+      {
+        yield();
+      }
+        
+       
+       
      }
     
 

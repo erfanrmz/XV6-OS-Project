@@ -88,10 +88,7 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
-  if (Policy == 2)
-    p->currentSlice = QUANTUM;
-  else
-    p->currentSlice = 0;
+  p->currentSlice = QUANTUM;
   
 
   release(&ptable.lock);
