@@ -184,6 +184,9 @@ UPROGS=\
 	_getParentIDtest\
 	_getSyscallCounterTest\
 	_getChildrenTest\
+	_changePolicyTest\
+	_timeMeasurementTest\
+	_roundRobinTest\
 	_priorityTest\
 
 fs.img: mkfs README $(UPROGS)
@@ -257,6 +260,9 @@ EXTRA=\
 	getParentIDtest.c\
 	getSyscallCounterTest.c\
 	getChildrenTest.c\
+	timeMeasurementTest.c\
+	roundRobinTest.c\
+	changePolicyTest.c\
 	priorityTest.c\
 	printf.c umalloc.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\

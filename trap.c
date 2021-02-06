@@ -50,6 +50,7 @@ trap(struct trapframe *tf)
   case T_IRQ0 + IRQ_TIMER:
     if(cpuid() == 0){
       acquire(&tickslock);
+      //updateProcTimes();
       ticks++;
       wakeup(&ticks);
       release(&tickslock);
@@ -105,11 +106,23 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
      {
-       int current = myproc()->currentSlice;
-       if ( current ) 
-          myproc()->currentSlice = current - 1;
-       else 
-          yield();
+       yield();
+      //  if(Policy == 2)
+      //  {
+      //   int current = myproc()->currentSlice;
+      //   if ( current ) 
+      //     myproc()->currentSlice = current - 1;
+      //   else 
+      //     yield();
+      //  }
+          
+      //  else
+      // {
+      //   yield();
+      // }
+        
+       
+       
      }
     
 

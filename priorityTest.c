@@ -1,10 +1,13 @@
 #include "types.h"
 #include "stat.h"
 #include "user.h"
+#include "time.h"
 
 int main()
 {
-     int my_priority=3;
+    // clock_t begin = clock();
+    int cbtAVG = 0,tatAVG = 0,wtAVG = 0;
+    int my_priority=3;
     
     int childcount =5;
     printf(1,"main %d ->%d\n",getpid(),my_priority);
@@ -14,6 +17,7 @@ int main()
         for(int i=0;i<childcount;i++){
             if (getpid() == my_pid){
                 if(!fork()){
+                    // begin = clock();
                     my_priority = cur_prio;
                     setPriority(getpid(),cur_prio);
                     
@@ -30,6 +34,22 @@ int main()
             //printf(1,"/%d/ \n",getpid());
         }
     }
+    else{
+        int cbt,tat,wt;
+        // int pid[10];
+        for (int i = 0 ; i < 25 ; i++)
+        {
+            // wait2(&cbt,&tat,&wt);
+            cbtAVG += cbt;
+            tatAVG += tat;
+            wtAVG  += wt;
+        }
+        // printf(1,"CPU burst Time AVG: %d\n",cbtAVG/10);
+        // printf(1,"Turn around Time AVG: %d\n",tatAVG/10);
+        // printf(1,"waiting Time AVG: %d\n",wt/10);
+    }
+    // clock_t end = clock();
+    // printf(1,"%d \n",(double)(end - begin) / CLOCKS_PER_SEC);
     // for (int i = 30; i > 0; i--)
     // {
     //     if (fork() == 0)
