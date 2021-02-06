@@ -117,29 +117,24 @@ sys_getSyscallCounter(void)
 int
 sys_setPriority(void)
 {
-  int priority;
-  if(argint(0, &priority) < 0)
-    return -1;
-  if (priority > 0 && priority < 7)
-  {
-    myproc()->prio = priority;
-  }else
-  {
-    myproc()->prio = 5;
-  }
-  
-  return 0;
+  int pid, pr;
+    if(argint(0, &pid) < 0)
+        return -1;
+    if(argint(1, &pr) < 0)
+        return -1;
+
+    return ChangePriority(pid, pr);
   
 }
 
-int
-sys_safePrint(void){
-  int child_num;
-  int i;
-  if(argint(0, &child_num) < 0 ) 
-    return -1;
-  if(argint(1, &i) < 0 ) 
-    return -1;
+// int
+// sys_safePrint(void){
+//   int child_num;
+//   int i;
+//   if(argint(0, &child_num) < 0 ) 
+//     return -1;
+//   if(argint(1, &i) < 0 ) 
+//     return -1;
   
-  return myPrint(child_num,i);
-}
+//   return myPrint(child_num,i);
+// }

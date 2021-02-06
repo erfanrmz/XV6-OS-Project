@@ -4,33 +4,43 @@
 
 int main()
 {
+     int my_priority=3;
     
-    int childcount =2;
+    int childcount =5;
+    printf(1,"main %d ->%d\n",getpid(),my_priority);
     int my_pid = getpid();
-    for (int cur_prio = 3 ; cur_prio > 0 ; cur_prio--)
+    for (int cur_prio = 6 ; cur_prio > 0 ; cur_prio--)
     {
         for(int i=0;i<childcount;i++){
             if (getpid() == my_pid){
-                if(fork()){
-                    setPriority(cur_prio);
+                if(!fork()){
+                    my_priority = cur_prio;
+                    setPriority(getpid(),cur_prio);
+                    
                 }
             }
         }
+        // if (getpid() == my_pid)
+        // printf(1,"finished making :%d\n",cur_prio);
     }
-    for (int i = 0; i < 5; i++)
-    {
-        printf(1,"%d->%d \n",getpid(),i);
-        // safePrint(getpid(),i);
+    if (getpid() != my_pid){
+        for (int i = 0; i < 25 ; i++)
+        {
+            printf(1,"%d \n",my_priority);
+            //printf(1,"/%d/ \n",getpid());
+        }
     }
-    // for (int i = 0; i < 20; i++)
+    // for (int i = 30; i > 0; i--)
     // {
     //     if (fork() == 0)
     //     {
     //         int child =i;
-    //         setPriority((child/5)+1);
+
+    //         setPriority(getpid(),(child/5));
+    //         my_priority = (child/5);
     //         for (int j = 0; j < 25; j++)
     //         {
-    //             printf(1,"\n %d->%d \n",getpid(),j);
+    //             printf(1,"%d \n",my_priority);
     //         }
     //         exit();
             

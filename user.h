@@ -26,8 +26,8 @@ int uptime(void);
 int getParentID(void);
 int getChildren(void);
 int getSyscallCounter(int);
-int setPriority(int);
-int safePrint(int ,int);
+int setPriority(int ,int );
+// int safePrint(int ,int);
 
 // ulib.c
 int stat(const char*, struct stat*);
