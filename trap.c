@@ -106,7 +106,7 @@ trap(struct trapframe *tf)
   if(myproc() && myproc()->state == RUNNING &&
      tf->trapno == T_IRQ0+IRQ_TIMER)
      {
-       if(Policy == 2)
+       if(Policy == 2 || Policy == 1)
        {
         int current = myproc()->currentSlice;
         if ( current ) 
