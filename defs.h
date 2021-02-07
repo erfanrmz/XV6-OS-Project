@@ -9,6 +9,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+int Policy;
 
 // bio.c
 void            binit(void);
@@ -118,11 +119,13 @@ void            setproc(struct proc*);
 void            sleep(void*, struct spinlock*);
 void            userinit(void);
 int             wait(void);
+int             wait2(int* , int* , int*);
 void            wakeup(void*);
 void            yield(void);
 int             children(int);
 int             ChangePriority(int,int);
 // int             myPrint(int ,int);
+void            updateProcTimes(void);
 
 // swtch.S
 void            swtch(struct context**, struct context*);

@@ -25,6 +25,17 @@ sys_wait(void)
 {
   return wait();
 }
+int
+sys_wait2(void) {
+  int *cbt, *tat, *wt;
+  if (argptr(0, (void*)&cbt, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(1, (void*)&tat, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(2, (void*)&wt, sizeof(wt)) < 0)
+    return -1;
+  return wait2(cbt, tat, wt);
+}
 
 int
 sys_kill(void)
@@ -138,3 +149,19 @@ sys_setPriority(void)
   
 //   return myPrint(child_num,i);
 // }
+int 
+sys_changePolicy(void)
+{
+  int n;
+  if(argint(0, &n) < 0)
+    return -1;
+  if(n == 0 || n == 1 || n == 2)
+    Policy = n;
+  else
+  {
+    cprintf("You can just choose 0 , 1 and 2");
+  }
+
+  return Policy;
+
+}
