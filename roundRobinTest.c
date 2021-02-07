@@ -6,10 +6,10 @@ int main()
 {
     int x = getpid();
     int cbtAVG = 0,tatAVG = 0,wtAVG = 0;
-    int *cbtS = malloc(11 * sizeof(int));
-    int *tatS = malloc(11 * sizeof(int));
-    int *wtS = malloc(11 * sizeof(int));
-    int *pidS = malloc(11 * sizeof(int));
+    int *cbtS = malloc(10 * sizeof(int));
+    int *tatS = malloc(10 * sizeof(int));
+    int *wtS = malloc(10 * sizeof(int));
+    int *pidS = malloc(10 * sizeof(int));
     for (int i = 0 ; i < 10 ; i++)
     {
         if (x == getpid())

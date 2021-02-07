@@ -11,7 +11,7 @@ struct {
   struct spinlock lock;
   struct proc proc[NPROC];
 } ptable;
-
+int Policy;
 // struct proc* q1[64];
 // struct proc* q2[64];
 // struct proc* q3[64];
@@ -414,7 +414,7 @@ void
 scheduler(void)
 {
   struct proc *p;
-  struct proc *p1;
+  struct proc *q;
   struct cpu *c = mycpu();
   c->proc = 0;
   
@@ -423,21 +423,21 @@ scheduler(void)
     sti();
     if(Policy == 0)
     {
-      struct proc *highP =  0;
+      struct proc *s =  0; // find high-priority and save it to s
       // Loop over process table looking for process to run.
       acquire(&ptable.lock);
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
         if(p->state != RUNNABLE){
           continue;
         }
-        highP = p;
-        for(p1=ptable.proc; p1<&ptable.proc[NPROC];p1++){
-            if(p1->state != RUNNABLE)
+        s = p;
+        for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
+            if(q->state != RUNNABLE)
               continue;
-            if(highP->prio > p1->prio) 
-              highP = p1;
+            if(s->prio > q->prio) 
+              s = q;
         }
-        p = highP;
+        p = s;
         // if(p->prio != 3 ){
         //   //cprintf("neglected %d prio = %d \n",p->pid,p->prio);
         //   continue;
