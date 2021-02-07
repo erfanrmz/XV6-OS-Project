@@ -6,10 +6,10 @@ int main()
 {
     int x = getpid();
     int cbtAVG = 0,tatAVG = 0,wtAVG = 0;
-    int *cbtS = malloc(10 * sizeof(int));
-    int *tatS = malloc(10 * sizeof(int));
-    int *wtS = malloc(10 * sizeof(int));
-    int *pidS = malloc(10 * sizeof(int));
+    int *cbtS = malloc(11 * sizeof(int));
+    int *tatS = malloc(11 * sizeof(int));
+    int *wtS = malloc(11 * sizeof(int));
+    int *pidS = malloc(11 * sizeof(int));
     for (int i = 0 ; i < 10 ; i++)
     {
         if (x == getpid())
@@ -35,7 +35,7 @@ int main()
         }
         for (int i = 0 ; i < 10 ; i++)
         {
-            printf(1,"PID: %d\n",cbtAVG/10);
+            printf(1,"PID: %d\n",pidS[i]);
             printf(1,"CPU burst Time: %d\n",cbtS[i]);
             printf(1,"Turn around Time: %d\n",tatS[i]);
             printf(1,"waiting Time: %d\n\n\n",wtS[i]);
@@ -50,9 +50,9 @@ int main()
     }
     else
     {
-        for (int i = 0 ; i < 100 ;i++)
+        for (int i = 0 ; i < 1000 ;i++)
         {
-            printf(1,"pid:%d |i:%d\n",getpid,i);
+            printf(1,"pid:%d |i:%d\n",getpid(),i);
         }
     }
     while(wait() != -1) { }
