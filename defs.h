@@ -120,10 +120,13 @@ void            sleep(void*, struct spinlock*);
 void            userinit(void);
 int             wait(void);
 int             wait2(int* , int* , int*);
+int             wait3(int* , int* , int* , int*);
 void            wakeup(void*);
 void            yield(void);
 int             children(int);
 int             ChangePriority(int,int);
+int             ChangeQueue(int,int);
+int             findQueue(int);
 // int             myPrint(int ,int);
 void            updateProcTimes(void);
 

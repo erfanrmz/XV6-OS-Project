@@ -58,6 +58,7 @@ struct proc {
   int runTime;                 // Running Time
   int readyTime;               // Ready Time
   int sleepTime;               // Sleeping Time
+  int Queue;
 };
 
 // Process memory is laid out contiguously, low addresses first:

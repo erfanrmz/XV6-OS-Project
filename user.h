@@ -30,6 +30,9 @@ int setPriority(int ,int );
 // int safePrint(int ,int);
 int changePolicy(int);
 int wait2(int*,int*,int*);
+int wait3(int*,int*,int*,int*);
+int setQueue(int ,int );
+int getQueue(int);
 
 // ulib.c
 int stat(const char*, struct stat*);

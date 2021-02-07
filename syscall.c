@@ -110,6 +110,9 @@ extern int sys_setPriority (void);
 // extern int sys_safePrint(void);
 extern int sys_changePolicy(void);
 extern int sys_wait2(void);
+extern int sys_wait3(void);
+extern int sys_setQueue (void);
+extern int sys_getQueue (void);
 
 static int (*syscalls[])(void) = {
 [SYS_fork]    sys_fork,
@@ -140,6 +143,9 @@ static int (*syscalls[])(void) = {
 // [SYS_safePrint] sys_safePrint,
 [SYS_changePolicy] sys_changePolicy,
 [SYS_wait2] sys_wait2,
+[SYS_wait3] sys_wait3,
+[SYS_setQueue] sys_setQueue,
+[SYS_getQueue] sys_getQueue,
 };
 
 void

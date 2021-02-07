@@ -187,6 +187,7 @@ UPROGS=\
 	_changePolicyTest\
 	_timeMeasurementTest\
 	_roundRobinTest\
+	_queueTest\
 	_priorityTest\
 
 fs.img: mkfs README $(UPROGS)
@@ -262,6 +263,7 @@ EXTRA=\
 	getChildrenTest.c\
 	timeMeasurementTest.c\
 	roundRobinTest.c\
+	queueTest.c\
 	changePolicyTest.c\
 	priorityTest.c\
 	printf.c umalloc.c\

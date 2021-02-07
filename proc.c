@@ -399,6 +399,56 @@ wait2(int *cbt,int *tat,int *wt) // CPU burst Time , Turn around time , waiting 
     sleep(curproc, &ptable.lock);  //DOC: wait-sleep
   }
 }
+int
+wait3(int *cbt,int *tat,int *wt , int *q) // CPU burst Time , Turn around time , waiting time
+{
+  struct proc *p;
+  int havekids, pid;
+  struct proc *curproc = myproc();
+
+  acquire(&ptable.lock);
+  for(;;){
+    // Scan through table looking for exited children.
+    havekids = 0;
+    for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+      if(p->parent != curproc)
+        continue;
+      havekids = 1;
+      if(p->state == ZOMBIE){
+        // Found one.
+        pid = p->pid;
+        *cbt = p->runTime;
+        *tat = p->readyTime + p->runTime + p->sleepTime;
+        *wt  = p->readyTime;
+        *q = p->Queue;
+        kfree(p->kstack);
+        p->kstack = 0;
+        freevm(p->pgdir);
+        p->pid = 0;
+        p->parent = 0;
+        p->name[0] = 0;
+        p->killed = 0;
+        p->cTime = 0;
+        p->tTime = 0;
+        p->readyTime = 0;
+        p->runTime = 0;
+        p->sleepTime = 0;
+        p->state = UNUSED;
+        release(&ptable.lock);
+        return pid;
+      }
+    }
+
+    // No point waiting if we don't have any children.
+    if(!havekids || curproc->killed){
+      release(&ptable.lock);
+      return -1;
+    }
+
+    // Wait for children to exit.  (See wakeup1 call in proc_exit.)
+    sleep(curproc, &ptable.lock);  //DOC: wait-sleep
+  }
+}
 
 //PAGEBREAK: 42
 // Per-CPU process scheduler.
@@ -438,14 +488,6 @@ scheduler(void)
               s = q;
         }
         p = s;
-        // if(p->prio != 3 ){
-        //   //cprintf("neglected %d prio = %d \n",p->pid,p->prio);
-        //   continue;
-        // }
-        // cprintf("running  %d prio = %d \n",p->pid,p->prio);
-
-        
-
         // Switch to chosen process.  It is the process's job
         // to release ptable.lock and then reacquire it
         // before jumping back to us.
@@ -463,7 +505,7 @@ scheduler(void)
       release(&ptable.lock);
 
     }
-    else{
+    else if (Policy == 1 || Policy == 3){
       // Loop over process table looking for process to run.
       acquire(&ptable.lock);
       for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
@@ -482,6 +524,67 @@ scheduler(void)
         // Process is done running for now.
         // It should have changed its p->state before coming back.
         c->proc = 0;
+      }
+      release(&ptable.lock);
+    }
+    else if (Policy == 2)
+    {
+      acquire(&ptable.lock);
+      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if(p->state != RUNNABLE)
+          continue;
+        if (p-> Queue == 0 || p -> Queue == 3)
+        {
+          c->proc = p;
+          switchuvm(p);
+          p->state = RUNNING;
+
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+            
+        }
+        else if (p-> Queue == 1)
+        {
+          struct proc *s =  0;
+          s = p;
+          for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
+            if(q->state != RUNNABLE)
+              continue;
+            if(s->prio > q->prio) 
+              s = q;
+          }
+          p = s;
+          c->proc = p;
+          switchuvm(p);
+          p->state = RUNNING;
+
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+          c->proc = 0;
+        }
+        else if (p-> Queue == 2)
+        {
+          struct proc *s =  0;
+          s = p;
+          for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
+            if(q->state != RUNNABLE)
+              continue;
+            if(s->prio < q->prio) 
+              s = q;
+          }
+          p = s;
+          c->proc = p;
+          switchuvm(p);
+          p->state = RUNNING;
+
+          swtch(&(c->scheduler), p->context);
+          switchkvm();
+          c->proc = 0;
+        }
       }
       release(&ptable.lock);
     }
@@ -709,6 +812,38 @@ ChangePriority(int pid, int priority)
         if(p->pid == pid)
         {
             p->prio = priority;
+            break;
+        }
+    }
+    release(&ptable.lock);
+    // yield();
+    return pid;
+}
+int
+findQueue(int pid)
+{
+    struct proc *p;
+
+    acquire(&ptable.lock);
+    for(p=ptable.proc; p<&ptable.proc[NPROC]; p++)
+    {
+        if(p->pid == pid)
+            break;
+    }
+    release(&ptable.lock);
+    return p->Queue;
+}
+int
+ChangeQueue(int pid, int queue)
+{
+    struct proc *p;
+
+    acquire(&ptable.lock);
+    for(p=ptable.proc; p<&ptable.proc[NPROC]; p++)
+    {
+        if(p->pid == pid)
+        {
+            p->Queue = queue;
             break;
         }
     }

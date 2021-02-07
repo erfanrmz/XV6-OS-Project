@@ -27,3 +27,6 @@
 // #define SYS_safePrint 26
 #define SYS_changePolicy 27
 #define SYS_wait2 28
+#define SYS_setQueue 29
+#define SYS_getQueue 30
+#define SYS_wait3 31
