@@ -49,6 +49,19 @@ sys_wait3(void) {
     return -1;
   return wait3(cbt, tat, wt,q);
 }
+int
+sys_wait4(void) {
+  int *cbt, *tat, *wt , *priority;
+  if (argptr(0, (void*)&cbt, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(1, (void*)&tat, sizeof(cbt)) < 0)
+    return -1;
+  if (argptr(2, (void*)&wt, sizeof(wt)) < 0)
+    return -1;
+  if (argptr(3, (void*)&priority, sizeof(priority)) < 0)
+    return -1;
+  return wait4(cbt, tat, wt,priority);
+}
 
 int
 sys_kill(void)

@@ -121,6 +121,7 @@ void            userinit(void);
 int             wait(void);
 int             wait2(int* , int* , int*);
 int             wait3(int* , int* , int* , int*);
+int             wait4(int* , int* , int* , int*);
 void            wakeup(void*);
 void            yield(void);
 int             children(int);

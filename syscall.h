@@ -30,3 +30,4 @@
 #define SYS_setQueue 29
 #define SYS_getQueue 30
 #define SYS_wait3 31
+#define SYS_wait4 32
