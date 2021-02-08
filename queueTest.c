@@ -37,6 +37,11 @@ int main()
             if (getpid() == my_pid){
                 if(!fork()){
                     setQueue(getpid(),queue);
+                    if(queue == 2 || queue == 1)
+                    {
+                        setPriority(getpid(),(i%6)+1);
+                    }
+
                 }
             }
         }
