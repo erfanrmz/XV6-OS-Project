@@ -530,62 +530,76 @@ scheduler(void)
     else if (Policy == 2)
     {
       acquire(&ptable.lock);
-      for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
-        if(p->state != RUNNABLE)
-          continue;
-        if (p-> Queue == 0 || p -> Queue == 3)
-        {
-          c->proc = p;
-          switchuvm(p);
-          p->state = RUNNING;
+      int currentQueue = 0;
+      while(currentQueue < 4)
+      {
+        int found = 0;
+        for(p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+          if(p->state != RUNNABLE || p-> Queue != currentQueue )
+            continue;
+          found = 1;
+          
+          if (currentQueue == 0 || currentQueue == 3)
+          {
+            c->proc = p;
+            switchuvm(p);
+            p->state = RUNNING;
 
-          swtch(&(c->scheduler), p->context);
-          switchkvm();
+            swtch(&(c->scheduler), p->context);
+            switchkvm();
 
-          // Process is done running for now.
-          // It should have changed its p->state before coming back.
-          c->proc = 0;
-            
-        }
-        else if (p-> Queue == 1)
-        {
-          struct proc *s =  0;
-          s = p;
-          for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
-            if(q->state != RUNNABLE)
-              continue;
-            if(s->prio > q->prio) 
-              s = q;
+            // Process is done running for now.
+            // It should have changed its p->state before coming back.
+            c->proc = 0;
+              
           }
-          p = s;
-          c->proc = p;
-          switchuvm(p);
-          p->state = RUNNING;
+          else if (currentQueue == 1)
+          {
+            struct proc *s =  0;
+            s = p;
+            for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
+              if(q->state != RUNNABLE)
+                continue;
+              if(s->prio > q->prio) 
+                s = q;
+            }
+            p = s;
+            c->proc = p;
+            switchuvm(p);
+            p->state = RUNNING;
 
-          swtch(&(c->scheduler), p->context);
-          switchkvm();
-          c->proc = 0;
-        }
-        else if (p-> Queue == 2)
-        {
-          struct proc *s =  0;
-          s = p;
-          for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
-            if(q->state != RUNNABLE)
-              continue;
-            if(s->prio < q->prio) 
-              s = q;
+            swtch(&(c->scheduler), p->context);
+            switchkvm();
+            c->proc = 0;
           }
-          p = s;
-          c->proc = p;
-          switchuvm(p);
-          p->state = RUNNING;
+          else if (currentQueue == 2)
+          {
+            struct proc *s =  0;
+            s = p;
+            for(q=ptable.proc; q<&ptable.proc[NPROC];q++){
+              if(q->state != RUNNABLE)
+                continue;
+              if(s->prio < q->prio) 
+                s = q;
+            }
+            p = s;
+            c->proc = p;
+            switchuvm(p);
+            p->state = RUNNING;
 
-          swtch(&(c->scheduler), p->context);
-          switchkvm();
-          c->proc = 0;
+            swtch(&(c->scheduler), p->context);
+            switchkvm();
+            c->proc = 0;
+          }
+
         }
+        if(found == 0)
+          {
+            currentQueue++;
+          }
+
       }
+
       release(&ptable.lock);
     }
   }
